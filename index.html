@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>This is an example project for ajax</h1>
+    <p id="para">sample paragraph sample paragraph sample paragraph sample paragraph</p>
+    <span id="click-para"></span><br>
+    <button id="ajax-btn"> Send a ajax request</button>
+    <br>
+    <button id="ajax-btn-1"> Send a ajax request-2</button>
+    <button id="ajax-btn-table1"> Send a ajax request-table2</button>
+    <br>
+
+    <img id="box" style="width: 100px" ><br>
+    <button id="img-btn">click me</button>
+
+<!--    <section>-->
+<!--        <h3 id="userId"></h3>-->
+<!--        <h3 id="id"></h3>-->
+<!--        <h3 id="title"></h3>-->
+<!--        <h3 id="body"></h3>-->
+<!--    </section>-->
+
+    <section>
+        <table>
+            <thead>
+                <th>userId</th>
+                <th>id</th>
+                <th>title</th>
+                <th>body</th>
+            </thead>
+            <tbody id="tbody"></tbody>
+        </table>
+        <style>
+            table,th,td,tr{border: 1px black solid}
+        </style>
+    </section>
+
+    <script src="/js/jquery-3.7.1.min.js"></script>
+    <script>
+        $("#ajax-btn").click(function () {
+            console.log("Request started");
+            var http = new XMLHttpRequest();
+            console.log(http.readyState,"After the XMLHTTPRequest object created")
+            http.open('GET','db/db.txt');
+            console.log(http.readyState,"After the open method invoke");
+            http.onreadystatechange=function (){
+                console.log(http.readyState,"Inside on ready state change event")
+                console.log(http.responseText)
+                // var text= http.responseText;
+                // $("#click-para").html(text)
+                if (http.status==200 && http.readyState===4){
+                    $("#click-para").text(http.responseText);
+                }
+                console.log("??")
+                console.log(http.readyState);
+                console.log(http.status);
+                console.log(http.responseText);
+            }
+            console.log(http.responseText);
+            console.log(http.readyState,"After the response text printed");
+            http.send();
+            console.log(http.readyState,"After the send method Invoked");
+            console.log("Request finished");
+
+        });
+
+        $("#img-btn").click(function (){
+            var img=new XMLHttpRequest();
+            img.open('GET','images/istockphoto-1322999106-612x612-removebg-preview.png')
+            img.send();
+            img.onreadystatechange=function (){
+                if (img.status==200 && img.readyState===4){
+                    // $("#box").text(img.responseText);
+                    $('#box').attr('src','images/istockphoto-1322999106-612x612-removebg-preview.png').show();
+                }
+                console.log(http.readyState);
+                console.log(http.status);
+                console.log(http.responseText);
+            }
+        })
+    </script>
+    <script>
+        //synchronous
+        // console.log("1")
+        // console.log("2")
+        // console.log("3")
+
+        //asynchronous
+        // console.log("start")
+        // setTimeout(()=>{
+        //     console.log("middle1")
+        // },2000)
+        // setTimeout(()=>{
+        //     console.log("middle2")
+        // },1000)
+        // console.log("end")
+        console.log("**************************")
+        //eliye thiyna site ekaka thyna documentation ekak page eka refresh novi ape ekat load krnw
+        $("#ajax-btn-1").click(function () {
+            console.log("Request started");
+            $.ajax({
+                url:"https://jsonplaceholder.typicode.com/posts",
+                async:false,
+                success:function (response){
+                    console.log(response.userId)
+                    console.log(response.id)
+                    console.log(response.title)
+                    console.log(response.body)
+                    $('#userId').text(response.userId)
+                    $('#id').text(response.id)
+                    $('#title').text(response.title)
+                    $('#body').text(response.body)
+                },
+                error:function (error){
+                    console.log('error')
+                    console.log(error)
+                }
+            })
+            console.log("Request finished");
+
+        });
+
+        $("#ajax-btn-table1").click(function () {
+            $.ajax({
+                url: "https://jsonplaceholder.typicode.com/posts",
+                async:false,
+                success:function (response){
+                    response.forEach((respond)=>{
+                        $('#tbody').append(
+                            "<tr>"+
+                            "<td>"+
+                            respond.userId+
+                            "</td>"+
+                            "<td>"+
+                            respond.id+
+                            "</td>"+
+                            "<td>"+
+                            respond.title+
+                            "</td>"+
+                            "<td>"+
+                            respond.body+
+                            "</tr>"
+
+                        )
+                    })
+                }
+            })
+        })
+    </script>
+</body>
+</html>
